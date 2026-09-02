@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gold-300: #e5c76b;
+  --color-gold-400: #d4af37;
+  --color-gold-500: #b5952f;
+  --color-gold-600: #9a7d25;
+  --color-black-950: #0a0a0a;
+  --color-black-900: #121212;
+  --color-black-800: #1e1e1e;
+  --color-cream-yellow: #fffdf5;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream-yellow text-black font-sans antialiased selection:bg-gold-500 selection:text-white;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold text-black;
+  }
+}
+
+@layer utilities {
+  .bg-store-fixed {
+    background-image: linear-gradient(rgba(255, 253, 245, 0.88), rgba(255, 253, 245, 0.88)), url('./assets/store_background.png');
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .glass {
+    @apply bg-white/80 backdrop-blur-xl border-b border-black/5 shadow-sm;
+  }
+  .glass-dark {
+    @apply bg-black/60 backdrop-blur-xl border border-white/10 shadow-2xl;
+  }
+  .glass-card {
+    @apply bg-white border border-black/10 hover:border-gold-500 transition-all duration-300 shadow-md hover:shadow-2xl;
+  }
+  .text-premium-gold {
+    @apply bg-gradient-to-r from-gold-400 via-gold-300 to-gold-500 bg-clip-text text-transparent;
+  }
+  .gold-glow {
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+  }
+  .button-gold {
+    @apply bg-black text-white font-bold px-10 py-4 uppercase tracking-[0.2em] text-xs border border-gold-500/30 hover:bg-gold-500 hover:text-black hover:border-gold-500 transition-all duration-500 transform hover:-translate-y-1 shadow-[0_0_15px_rgba(0,0,0,0.5)] hover:shadow-[0_0_25px_rgba(181,149,47,0.4)] active:scale-95;
+  }
+  .button-outline {
+    @apply border-2 border-black text-black font-bold px-10 py-4 uppercase tracking-[0.2em] text-xs hover:bg-black hover:text-white transition-all duration-500 transform hover:-translate-y-1 shadow-lg active:scale-95;
+  }
+  .section-padding {
+    @apply py-24 md:py-32;
+  }
+}
