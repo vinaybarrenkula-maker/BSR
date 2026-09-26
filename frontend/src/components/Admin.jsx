@@ -25,7 +25,8 @@ const Admin = () => {
     e.preventDefault();
     setLoginError('');
     try {
-      const response = await fetch('http://localhost:5000/api/admin/login', {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const response = await fetch(`${API_URL}/api/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -55,7 +56,8 @@ const Admin = () => {
     setForgotPasswordMsg({ text: '', type: '' });
     
     try {
-      const response = await fetch('http://localhost:5000/api/admin/forgot-password', {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const response = await fetch(`${API_URL}/api/admin/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
@@ -82,7 +84,8 @@ const Admin = () => {
 
   const fetchMessages = async (token) => {
     try {
-      const response = await fetch('http://localhost:5000/api/messages', {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const response = await fetch(`${API_URL}/api/messages`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
