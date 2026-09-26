@@ -33,7 +33,7 @@ const Footer = () => {
               <a href="#" className="w-10 h-10 border border-black/10 flex items-center justify-center text-black hover:text-gold-500 hover:border-gold-500 transition-colors">
                 <FaFacebook size={18} />
               </a>
-              <a href="#" className="w-10 h-10 border border-black/10 flex items-center justify-center text-black hover:text-gold-500 hover:border-gold-500 transition-colors">
+              <a href="https://www.instagram.com/bsr_____abhi?stkn=MWtiYmJkdTZkYmNxZA==" target="_blank" rel="noreferrer" className="w-10 h-10 border border-black/10 flex items-center justify-center text-black hover:text-gold-500 hover:border-gold-500 transition-colors">
                 <FaInstagram size={18} />
               </a>
               <a href="#" className="w-10 h-10 border border-black/10 flex items-center justify-center text-black hover:text-gold-500 hover:border-gold-500 transition-colors">

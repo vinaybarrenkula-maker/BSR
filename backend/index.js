@@ -72,8 +72,87 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
+// Admin Login Route
+app.post('/api/admin/login', (req, res) => {
+  const { email, password } = req.body;
+  const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER;
+  const adminPassword = process.env.ADMIN_PASSWORD || 'bsr123';
+  
+  if (email === adminEmail && password === adminPassword) {
+    res.status(200).json({ success: true, token: 'admin_secret_token_123' });
+  } else {
+    res.status(401).json({ success: false, message: 'Invalid email or password' });
+  }
+});
+
+// Admin Forgot Password Route
+app.post('/api/admin/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER;
+
+  if (email !== adminEmail) {
+    // Return a generic message for security, or explicit for convenience.
+    return res.status(400).json({ success: false, message: 'Email not registered as admin' });
+  }
+
+  try {
+    const newPassword = Math.random().toString(36).slice(-8);
+    
+    // Send Email to Admin with new password
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: adminEmail,
+      subject: `Password Reset for BSR Dashboard`,
+      html: `
+        <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 5px;">
+          <h2 style="color: #333;">Password Reset Successful</h2>
+          <p>Your new temporary password for the BSR Dashboard is:</p>
+          <div style="background: #f9f9f9; padding: 15px; border-radius: 5px; font-weight: bold; font-size: 18px; letter-spacing: 2px;">
+            ${newPassword}
+          </div>
+          <p>Please log in and update your .env file with a secure password when possible.</p>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    
+    // Update password in memory
+    process.env.ADMIN_PASSWORD = newPassword;
+    
+    // Update .env file
+    const fs = require('fs');
+    const path = require('path');
+    const envPath = path.join(__dirname, '.env');
+    if (fs.existsSync(envPath)) {
+      let envContent = fs.readFileSync(envPath, 'utf8');
+      if (envContent.includes('ADMIN_PASSWORD=')) {
+        envContent = envContent.replace(/ADMIN_PASSWORD=.*/, `ADMIN_PASSWORD=${newPassword}`);
+      } else {
+        envContent += `\nADMIN_PASSWORD=${newPassword}`;
+      }
+      fs.writeFileSync(envPath, envContent);
+    }
+    
+    res.status(200).json({ success: true, message: 'New password sent to your email' });
+  } catch (error) {
+    console.error('Error sending forgot password email:', error);
+    res.status(500).json({ success: false, message: 'Failed to send password reset email' });
+  }
+});
+
+// Middleware for Admin Routes
+const requireAdmin = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader === 'Bearer admin_secret_token_123') {
+    next();
+  } else {
+    res.status(401).json({ error: 'Unauthorized access' });
+  }
+};
+
 // Admin Route to view messages
-app.get('/api/messages', async (req, res) => {
+app.get('/api/messages', requireAdmin, async (req, res) => {
   try {
     const messages = await Message.find().sort({ createdAt: -1 });
     res.status(200).json(messages);
